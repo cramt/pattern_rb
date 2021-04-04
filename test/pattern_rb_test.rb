@@ -89,5 +89,41 @@ describe Pattern do
       end
       _(matcher.call(2, "bruh")).must_equal "second thing is bruh"
     end
+    it "matches head and splats tail" do
+      matcher = Pattern.new do
+        pattern(a, *as) do |a, as|
+          "#{a} followed by #{as.inspect}"
+        end
+      end
+      _(matcher.call(1,2,3)).must_equal "1 followed by [2, 3]"
+    end
+
+    it "splats head and matches tail" do
+      matcher = Pattern.new do
+        pattern(*as, a) do |as, a|
+          "#{as.inspect} followed by #{a}"
+        end
+      end
+      _(matcher.call(1,2,3)).must_equal "[1, 2] followed by 3"
+    end
+
+    it "splits body inbetween matching head and tail" do
+      matcher = Pattern.new do
+        pattern(a1, *as, a2) do |a1, as, a2|
+          "#{as.inspect} is in between #{a1} and #{a2}"
+        end
+      end
+      _(matcher.call(1,2,3,4,5)).must_equal "[2, 3, 4] is in between 1 and 5"
+    end
+
+    it "raises error on multiple splats" do
+      _(-> {
+        Pattern.new do
+          pattern(*as, *bs) do |as, bs|
+            "this doesnt matter"
+          end
+        end
+      }).must_raise(Pattern::MultipleSplats)
+    end
   end
 end

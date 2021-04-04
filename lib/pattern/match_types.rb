@@ -20,8 +20,8 @@ module Pattern
       "MatchVar<#{@sym}>"
     end
 
-    def arity
-      1
+    def to_a
+      [MatchSpalt.new]
     end
   end
 
@@ -30,8 +30,14 @@ module Pattern
       true
     end
 
-    def arity
-      0
+    def to_a
+      [MatchSpalt.new]
+    end
+  end
+
+  class MatchSpalt
+    def ==(_other)
+      true
     end
   end
 end

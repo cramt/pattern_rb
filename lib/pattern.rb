@@ -14,6 +14,10 @@ module Pattern
 
   end
 
+  class MultipleSplats < StandardError
+
+  end
+
   class Pattern
     def initialize(&block)
       @context = PatternContext.new
@@ -65,25 +69,17 @@ module Pattern
 
   class Example
     def initialize(elements, block)
-      @elements = elements.map do |x|
-        Element.for x
-      end
+      @elements = ElementCollection.new elements
       @block = block
-      total_arity = @elements.map {|x|x.arity}.sum
-      raise(ArityMisMatch.new) unless @block.arity == total_arity
+      raise(ArityMisMatch.new) unless @block.arity == @elements.total_arity
     end
 
     def call(*args)
-      @elements.each do |element|
-        element.mutate(args)
-      end
-      @block.call(*args)
+      @block.call(*@elements.generate_argument_list(args))
     end
 
     def match?(*args)
-      @elements.zip(args).all? do |element, value|
-        element == value
-      end
+      @elements.matches(args)
     end
   end
 end
