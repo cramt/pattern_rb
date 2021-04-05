@@ -7,6 +7,7 @@
       <change beforePath="$PROJECT_DIR$/lib/pattern/element.rb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pattern/element.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/pattern/match_types.rb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pattern/match_types.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/pattern_rb_test.rb" beforeDir="false" afterPath="$PROJECT_DIR$/test/pattern_rb_test.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_helper.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,15 +63,13 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -108,7 +107,8 @@
       <option name="presentableId" value="Default" />
       <updated>1617475048956</updated>
       <workItem from="1617475050934" duration="11241000" />
-      <workItem from="1617539699271" duration="10259000" />
+      <workItem from="1617539699271" duration="10317000" />
+      <workItem from="1617625756895" duration="3318000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1617544951866</created>
@@ -117,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617544951866</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="splat matching is now supported">
+      <created>1617554642433</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1617554642433</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -125,7 +132,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
+    <MESSAGE value="splat matching is now supported" />
+    <option name="LAST_COMMIT_MESSAGE" value="splat matching is now supported" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pattern_rb@default.rcov" NAME="default Coverage Results" MODIFIED="1617486221070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="pattern_rb" />

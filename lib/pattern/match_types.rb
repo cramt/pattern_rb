@@ -1,3 +1,5 @@
+require "delegate"
+
 module Pattern
   class MatchVar
     @match_vars = {}
@@ -12,10 +14,6 @@ module Pattern
       @sym = sym
     end
 
-    def ==(_other)
-      true
-    end
-
     def to_s
       "MatchVar<#{@sym}>"
     end
@@ -26,18 +24,27 @@ module Pattern
   end
 
   class MatchNoCapture
-    def ==(_other)
-      true
-    end
-
     def to_a
       [MatchSpalt.new]
     end
   end
 
   class MatchSpalt
-    def ==(_other)
-      true
+
+  end
+
+  class MatchOr < Delegator
+    def initialize(inner)
+      super
+      @inner = inner
+    end
+
+    def __getobj__
+      @inner
+    end
+
+    def __setobj__(_)
+
     end
   end
 end

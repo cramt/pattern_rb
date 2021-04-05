@@ -42,6 +42,10 @@ module Pattern
       @patterns << Example.new(args, block)
     end
 
+    def either(*args)
+      MatchOr.new args
+    end
+
     def method_missing(symbol, *_)
       MatchVar.for symbol
     end

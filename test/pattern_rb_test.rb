@@ -33,10 +33,18 @@ describe Pattern do
     it "matches regex constants" do
       matcher = Pattern.new do
         pattern(/.(.)./) do |match_data|
-          "the middle one is #{match_data[1]}"
+          "the middle one is #{match_data[0]}"
         end
       end
       _(matcher.call("abc")).must_equal "the middle one is b"
+    end
+    it "matches 2 regex constants" do
+      matcher = Pattern.new do
+        pattern(/.(..)(..)/) do |match_data|
+          "the middle one is #{match_data[0]}, and the last one is #{match_data[1]}"
+        end
+      end
+      _(matcher.call("abbcc")).must_equal "the middle one is bb, and the last one is cc"
     end
     it "matches range constants" do
       matcher = Pattern.new do
@@ -71,6 +79,25 @@ describe Pattern do
         end
       }).must_raise(Pattern::ArityMisMatch)
     end
+
+    it "matches nil on var" do
+      matcher = Pattern.new do
+        pattern(a, b) do |a, b|
+          "#{a}, #{b}"
+        end
+      end
+      _(matcher.call(nil, 2)).must_equal ", 2"
+    end
+
+    it "matches either between 1 or 0" do
+      matcher = Pattern.new do
+        pattern(either(1, 0)) do |x|
+          "its #{x}"
+        end
+      end
+      _(matcher.call(1)).must_equal "its 1"
+      _(matcher.call(0)).must_equal "its 0"
+    end
   end
   describe "when called with multiple params" do
     it "omits _ from arg list" do
@@ -95,7 +122,7 @@ describe Pattern do
           "#{a} followed by #{as.inspect}"
         end
       end
-      _(matcher.call(1,2,3)).must_equal "1 followed by [2, 3]"
+      _(matcher.call(1, 2, 3)).must_equal "1 followed by [2, 3]"
     end
 
     it "splats head and matches tail" do
@@ -104,7 +131,7 @@ describe Pattern do
           "#{as.inspect} followed by #{a}"
         end
       end
-      _(matcher.call(1,2,3)).must_equal "[1, 2] followed by 3"
+      _(matcher.call(1, 2, 3)).must_equal "[1, 2] followed by 3"
     end
 
     it "splits body inbetween matching head and tail" do
@@ -113,7 +140,7 @@ describe Pattern do
           "#{as.inspect} is in between #{a1} and #{a2}"
         end
       end
-      _(matcher.call(1,2,3,4,5)).must_equal "[2, 3, 4] is in between 1 and 5"
+      _(matcher.call(1, 2, 3, 4, 5)).must_equal "[2, 3, 4] is in between 1 and 5"
     end
 
     it "raises error on multiple splats" do

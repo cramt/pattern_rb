@@ -34,19 +34,19 @@ module Pattern
     def generate_argument_list_with_splat(args, splat_index)
       after, before = @inner.partition.with_index { |_, i| i > splat_index }
       args = args.reverse
-      after_result = after.reverse.filter_map do |element|
-        element.mutate(args)
-      end.reverse
+      after_result = after.reverse.map do |element|
+        element.mutate(args).first element.arity
+      end.flatten(1).reverse
       args = args.reverse
-      before.filter_map do |element|
-        element.mutate(args)
-      end.concat after_result
+      before.map do |element|
+        element.mutate(args).first element.arity
+      end.flatten(1).concat after_result
     end
 
     def generate_argument_list_without_splat(args)
-      @inner.filter_map do |element|
-        element.mutate(args)
-      end
+      @inner.map do |element|
+        element.mutate(args).first element.arity
+      end.flatten(1)
     end
 
     def contains_splat
@@ -73,13 +73,23 @@ module Pattern
         BlankElement.new inner
       when MatchSpalt
         SplatElement.new inner
+      when Range
+        CustomElement.new inner
+      when Regexp
+        RegexElement.new inner
+      when MatchOr
+        OrElement.new inner
       else
-        if inner.respond_to?(:match?) || inner.respond_to?(:cover?)
+        if inner.respond_to?(:match?)
           CustomElement.new inner
         else
           ConstElement.new inner
         end
       end
+    end
+
+    def mutate(args)
+      [args.shift]
     end
   end
 
@@ -93,7 +103,7 @@ module Pattern
     end
 
     def mutate(args)
-      args
+      [args]
     end
   end
 
@@ -105,10 +115,6 @@ module Pattern
     def ==(_other)
       true
     end
-
-    def mutate(args)
-      args.shift
-    end
   end
 
   class ConstElement < Element
@@ -118,11 +124,6 @@ module Pattern
 
     def ==(other)
       @inner == other
-    end
-
-    def mutate(args)
-      args.shift
-      nil
     end
   end
 
@@ -134,10 +135,19 @@ module Pattern
     def ==(_other)
       true
     end
+  end
+
+  class RegexElement < Element
+    def arity
+      1
+    end
+
+    def ==(other)
+      @inner === other
+    end
 
     def mutate(args)
-      args.shift
-      nil
+      [@inner.match(args.shift).captures]
     end
   end
 
@@ -149,9 +159,26 @@ module Pattern
     def ==(other)
       @inner === other
     end
+  end
+
+  class OrElement < Element
+    def initialize(inner)
+      super
+      @inner = ElementCollection.new inner
+    end
+
+    def arity
+      1
+    end
+
+    def ==(other)
+      found = @inner.find { |x| x == other }
+      @found = found
+      !found.nil?
+    end
 
     def mutate(args)
-      args.shift
+      @found.mutate(args)
     end
   end
 end
